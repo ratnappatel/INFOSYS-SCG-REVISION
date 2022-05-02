@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gl.entity.User;
+import com.gl.exception.UserException;
 import com.gl.repository.UsersRepository;
 
 @Service
@@ -21,12 +22,11 @@ public class UserServiceImpl  implements UserService{
 	}
 
 	@Override
-	public User getUserDetails(int id) {
-		Optional<User> user=repository.findById(id);
-		if(user.isPresent())
-			return user.get();
-		else
-			return null;
+	public User getUserDetails(int id) throws UserException
+	{
+		Optional<User> data=repository.findById(id);
+		User user=data.orElseThrow(()-> new UserException("User with id "+id+"does not exists"));
+		return user;
 	}
 	
 	
